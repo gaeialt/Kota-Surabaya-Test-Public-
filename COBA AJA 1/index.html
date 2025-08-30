@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>E-Government Kota Surabaya — Prototipe</title>
+<style>
+  :root{
+    --bg:#f6fbfc; --card:#ffffff; --accent:#0ea5a4; --accent-dark:#0b8e84; --muted:#566074;
+    --radius:12px; --glass: rgba(2,6,23,0.04);
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0f1724}
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(90deg,#e6fffb, #f0f9ff);box-shadow:0 2px 8px rgba(2,6,23,0.04);position:sticky;top:0;z-index:50}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:grid;place-items:center;color:#04202a;font-weight:700}
+  h1{margin:0;font-size:16px}
+  nav{display:flex;gap:10px;align-items:center}
+  .btn{background:var(--accent);color:#04202a;padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+  .ghost{background:transparent;border:1px solid rgba(2,6,23,0.06);padding:8px 10px;border-radius:10px}
+  main{padding:20px;max-width:1100px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  .card{background:var(--card);padding:14px;border-radius:var(--radius);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
+  .hero{display:flex;gap:16px;align-items:center}
+  .hero .text{flex:1}
+  .lead{color:var(--muted);font-size:13px}
+  .services{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+  .service{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(14,165,164,0.06), rgba(14,165,164,0.02));text-align:center}
+  .service small{display:block;color:var(--muted);margin-top:6px}
+  .form-row{display:flex;gap:8px;margin-bottom:8px}
+  input, select, textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #e9f0f3}
+  textarea{min-height:80px;resize:vertical}
+  .list{display:flex;flex-direction:column;gap:8px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:8px 10px;border-bottom:1px solid #eef2f7;text-align:left}
+  th{background:#fbfdfe;font-weight:700}
+  .small{font-size:13px;color:var(--muted)}
+  footer{padding:20px;text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+  .top-actions{display:flex;gap:8px;align-items:center}
+  @media(max-width:980px){ .grid{grid-template-columns:1fr} .services{grid-template-columns:repeat(2,1fr)} }
+  /* tiny badges */
+  .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;background:#f1fdfc;color:#035550}
+  .status-pending{background:#fff7ed;color:#92400e;padding:4px 8px;border-radius:8px;font-weight:700}
+  .status-done{background:#ecfdf5;color:#065f46;padding:4px 8px;font-weight:700;border-radius:8px}
+  .status-rejected{background:#fff1f2;color:#9f1239;padding:4px 8px;border-radius:8px;font-weight:700}
+  /* simple modal */
+  .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;z-index:999}
+  .modal{background:var(--card);padding:16px;border-radius:12px;max-width:720px;width:100%}
+  .flex{display:flex;gap:8px;align-items:center}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">EG</div>
+    <div>
+      <h1>E-Government Kota Surabaya</h1>
+      <div class="lead">Layanan publik digital — prototipe</div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="top-actions">
+      <button class="ghost" id="btnNews">Berita</button>
+      <button class="ghost" id="btnServices">Layanan</button>
+      <button class="ghost" id="btnReport">Lapor</button>
+    </div>
+    <div style="width:12px"></div>
+    <div id="authArea">
+      <!-- dynamic login / user -->
+      <button class="btn" id="btnLogin">Masuk</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="grid">
+    <!-- left: main content -->
+    <div>
+      <!-- Hero / Landing -->
+      <div class="card hero" id="homeView">
+        <div class="text">
+          <h2>Selamat datang di E-Government Surabaya</h2>
+          <p class="lead">Akses layanan publik, laporkan masalah, dan pantau status permohonan secara cepat dan aman.</p>
+          <div style="margin-top:12px" class="flex">
+            <button class="btn" id="goServices">Gunakan Layanan</button>
+            <button class="ghost" id="goReport">Laporkan Masalah</button>
+            <div style="margin-left:auto" class="small muted">Demo lokal • data tersimpan di browser</div>
+          </div>
+        </div>
+        <div style="width:200px;text-align:center">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='120'><rect rx='12' width='160' height='120' fill='%230ea5a4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='20' fill='white'>Surabaya</text></svg>" alt="Surabaya" style="max-width:100%;border-radius:8px"/>
+        </div>
+      </div>
+
+      <!-- News / Events -->
+      <div class="card" style="margin-top:12px" id="newsView">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Berita & Pengumuman</strong>
+          <div class="small muted">Terakhir: <span id="newsTime">--</span></div>
+        </div>
+        <div id="newsList" style="margin-top:10px" class="list"></div>
+      </div>
+
+      <!-- Services -->
+      <div class="card" style="margin-top:12px;display:none" id="servicesView">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Layanan Publik</strong>
+          <div class="small muted">Pilih layanan dan isi formulir</div>
+        </div>
+        <div class="services" style="margin-top:12px">
+          <div class="service" data-svc="izin_usaha">
+            <div style="font-weight:700">Permohonan Izin Usaha</div>
+            <small>Daftar izin usaha mikro & kecil</small>
+            <div style="margin-top:8px"><button class="btn svcBtn">Ajukan</button></div>
+          </div>
+          <div class="service" data-svc="bantuan_sosial">
+            <div style="font-weight:700">Layanan Bantuan Sosial</div>
+            <small>Permohonan bantuan & verifikasi</small>
+            <div style="margin-top:8px"><button class="btn svcBtn">Ajukan</button></div>
+          </div>
+          <div class="service" data-svc="izin_keramaian">
+            <div style="font-weight:700">Izin Keramaian</div>
+            <small>Event & kegiatan publik</small>
+            <div style="margin-top:8px"><button class="btn svcBtn">Ajukan</button></div>
+          </div>
+        </div>
+
+        <!-- service form placeholder -->
+        <div id="serviceFormWrap" style="margin-top:12px;display:none">
+          <strong id="serviceTitle"></strong>
+          <form id="serviceForm" style="margin-top:8px">
+            <div class="form-row"><input id="svcName" placeholder="Nama lengkap / Instansi (wajib)" required></div>
+            <div class="form-row"><input id="svcNIK" placeholder="NIK / ID (opsional)"></div>
+            <div class="form-row"><input id="svcContact" placeholder="Kontak (Telp/Email)"></div>
+            <div class="form-row"><textarea id="svcDesc" placeholder="Keterangan / tujuan (wajib)"></textarea></div>
+            <div class="form-row"><input id="svcFile" placeholder="Lampiran (URL atau catatan)"></div>
+            <div class="form-row" style="justify-content:flex-end">
+              <button class="btn" type="button" id="svcSubmit">Kirim Permohonan</button>
+              <button class="ghost" type="button" id="svcCancel">Batal</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Report / Aspiration -->
+      <div class="card" style="margin-top:12px;display:none" id="reportView">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Laporan & Aspirasi Warga</strong>
+          <div class="small muted">Laporkan kerusakan, kebersihan, lalu lintas, dsb.</div>
+        </div>
+
+        <form id="reportForm" style="margin-top:10px">
+          <div class="form-row"><input id="repName" placeholder="Nama (opsional)"></div>
+          <div class="form-row"><input id="repContact" placeholder="Kontak (opsional)"></div>
+          <div class="form-row"><select id="repType"><option value="">Pilih Jenis Laporan</option><option>Kerusakan Jalan</option><option>Kebersihan</option><option>Lalu Lintas</option><option>Keamanan</option><option>Lainnya</option></select></div>
+          <div class="form-row"><textarea id="repDesc" placeholder="Deskripsikan masalah (wajib)"></textarea></div>
+          <div class="form-row"><input id="repLocation" placeholder="Lokasi (kelurahan / alamat)"></div>
+          <div class="form-row" style="justify-content:flex-end">
+            <button class="btn" type="button" id="repSubmit">Kirim Laporan</button>
+          </div>
+        </form>
+
+        <div style="margin-top:12px">
+          <strong>Daftar Laporan</strong>
+          <div id="reportList" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- Admin Dashboard -->
+      <div class="card" style="margin-top:12px;display:none" id="adminView">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Admin Dashboard</strong>
+          <div class="small muted">Kelola permohonan & laporan</div>
+        </div>
+
+        <div style="margin-top:10px">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <button class="btn" id="refreshData">Refresh</button>
+            <button class="ghost" id="exportData">Export JSON</button>
+            <button class="ghost" id="clearAllData">Hapus Semua Data</button>
+          </div>
+
+          <div>
+            <strong>Permohonan Layanan</strong>
+            <div id="adminRequests" style="margin-top:8px"></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <strong>Laporan Warga</strong>
+            <div id="adminReports" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- right: aside -->
+    <aside>
+      <div class="card">
+        <strong>Profil & Akses</strong>
+        <div id="profileArea" style="margin-top:10px">
+          <div class="small muted">Belum masuk</div>
+          <div style="margin-top:8px"><button class="btn" id="quickLoginCitizen">Masuk sebagai Warga</button> <button class="ghost" id="quickLoginAdmin">Masuk sebagai Admin</button></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <strong>Kontak Penting</strong>
+        <div style="margin-top:8px" class="small">
+          <div><b>Call Center:</b> (031) 1234-567</div>
+          <div><b>Email:</b> info@surabaya.go.id</div>
+          <div style="margin-top:8px"><b>Alamat:</b> Jl. Balaikota No.1, Surabaya</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <strong>Data & Backup</strong>
+        <div style="margin-top:8px" class="small">
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="ghost" id="importDataBtn">Import JSON</button>
+            <input type="file" id="inputFile" accept=".json" style="display:none">
+            <button class="ghost" id="downloadDataBtn">Download JSON</button>
+          </div>
+          <div style="margin-top:8px" class="muted">Data tersimpan di browser (localStorage). Untuk produksi, gunakan server & DB.</div>
+        </div>
+      </div>
+    </aside>
+
+  </section>
+</main>
+
+<!-- modal for simple messages -->
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="modal">
+    <div id="modalContent"></div>
+    <div style="margin-top:10px;text-align:right"><button class="btn" id="modalClose">OK</button></div>
+  </div>
+</div>
+
+<footer>
+  Prototipe E-Government Kota Surabaya • Demo lokal — bukan sistem produksi.
+</footer>
+
+<script>
+/* -------------------------
+   Simple client-side prototype
+   - Data stored in localStorage
+   - Roles: guest / citizen / admin (mock)
+   ------------------------- */
+
+const LS_KEY = 'egov_surabaya_v1';
+const LS_USERS = 'egov_users_demo_v1'; // optional user storage
+let state = {
+  user: null, // {role:'citizen'|'admin', name:'...'}
+  news: [],
+  requests: [], // service requests
+  reports: [],  // citizen reports
+};
+
+function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function loadState(){ const s = localStorage.getItem(LS_KEY); if(s) state = JSON.parse(s); else initDemo(); }
+
+function initDemo(){
+  state = {
+    user: null,
+    news: [
+      {id:idn(), title:'Perbaikan Jalan Raya Darmo', body:'Pengerjaan perbaikan akan dimulai Senin ini di beberapa titik.', time: new Date().toLocaleString()},
+      {id:idn(), title:'Pengumuman Layanan Sosial', body:'Pendaftaran bantuan sosial dibuka hingga akhir bulan.', time: new Date().toLocaleString()}
+    ],
+    requests: [],
+    reports: []
+  };
+  saveState();
+}
+
+/* DOM refs */
+const homeView = document.getElementById('homeView');
+const newsList = document.getElementById('newsList');
+const newsTime = document.getElementById('newsTime');
+const btnLogin = document.getElementById('btnLogin');
+const authArea = document.getElementById('authArea');
+const profileArea = document.getElementById('profileArea');
+const btnNews = document.getElementById('btnNews');
+const btnServices = document.getElementById('btnServices');
+const btnReport = document.getElementById('btnReport');
+
+const servicesView = document.getElementById('servicesView');
+const servicesWrap = document.getElementById('serviceFormWrap');
+const serviceTitle = document.getElementById('serviceTitle');
+const serviceForm = document.getElementById('serviceForm');
+const svcSubmit = document.getElementById('svcSubmit');
+const svcCancel = document.getElementById('svcCancel');
+
+const reportView = document.getElementById('reportView');
+const reportList = document.getElementById('reportList');
+const reportForm = document.getElementById('reportForm');
+
+const adminView = document.getElementById('adminView');
+const adminRequests = document.getElementById('adminRequests');
+const adminReports = document.getElementById('adminReports');
+
+const svcButtons = document.querySelectorAll('.svcBtn');
+const goServices = document.getElementById('goServices');
+const goReport = document.getElementById('goReport');
+
+const quickLoginCitizen = document.getElementById('quickLoginCitizen');
+const quickLoginAdmin = document.getElementById('quickLoginAdmin');
+
+const modalBack = document.getElementById('modalBack');
+const modalContent = document.getElementById('modalContent');
+const modalClose = document.getElementById('modalClose');
+
+const inputFile = document.getElementById('inputFile');
+const importDataBtn = document.getElementById('importDataBtn');
+const downloadDataBtn = document.getElementById('downloadDataBtn');
+const exportDataBtn = document.getElementById('exportData');
+const clearAllDataBtn = document.getElementById('clearAllData');
+const refreshDataBtn = document.getElementById('refreshData');
+const downloadBtn = document.getElementById('downloadDataBtn') || document.getElementById('downloadDataBtn');
+
+/* helpers */
+function idn(){ return 'id_'+Math.random().toString(36).slice(2,9); }
+function showModal(html){ modalContent.innerHTML = html; modalBack.style.display='flex'; }
+function hideModal(){ modalBack.style.display='none'; }
+modalClose.addEventListener('click', hideModal);
+modalBack.addEventListener('click', (e)=>{ if(e.target===modalBack) hideModal(); });
+
+/* load state and render */
+loadState();
+renderAll();
+
+/* Render functions */
+function renderAll(){
+  renderNews();
+  renderAuth();
+  renderReports();
+  renderAdmin();
+}
+
+function renderNews(){
+  newsList.innerHTML = '';
+  newsTime.textContent = new Date().toLocaleTimeString();
+  state.news.forEach(n=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.style.marginBottom='8px';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong>${escapeHtml(n.title)}</strong><div class="small muted">${escapeHtml(n.time)}</div></div>
+    <div class="small" style="margin-top:6px">${escapeHtml(n.body)}</div>`;
+    newsList.appendChild(div);
+  });
+}
+
+function renderAuth(){
+  if(state.user){
+    authArea.innerHTML = `<div class="small muted">Masuk sebagai <strong>${escapeHtml(state.user.name)}</strong> (${state.user.role})</div>`;
+    profileArea.innerHTML = `<div><strong>${escapeHtml(state.user.name)}</strong><div class="small muted">Role: ${state.user.role}</div></div>
+      <div style="margin-top:8px"><button class="btn" id="btnLogout">Keluar</button></div>`;
+    document.getElementById('btnLogout').addEventListener('click', ()=>{ state.user=null; saveState(); renderAll(); });
+    // show admin view only for admin
+    if(state.user.role==='admin'){ adminView.style.display='block'; } else adminView.style.display='none';
+  } else {
+    authArea.innerHTML = `<button class="btn" id="btnLogin">Masuk</button>`;
+    profileArea.innerHTML = `<div class="small muted">Belum masuk</div><div style="margin-top:8px"><button class="btn" id="quickLoginCitizen">Masuk sebagai Warga</button> <button class="ghost" id="quickLoginAdmin">Masuk sebagai Admin</button></div>`;
+    document.getElementById('btnLogin').addEventListener('click', openLoginModal);
+    document.getElementById('quickLoginCitizen').addEventListener('click', ()=>{ loginAs('citizen'); });
+    document.getElementById('quickLoginAdmin').addEventListener('click', ()=>{ loginAs('admin'); });
+    adminView.style.display='none';
+  }
+}
+
+/* simple login modal (mock) */
+function openLoginModal(){
+  showModal(`<h3>Masuk (Demo)</h3>
+    <div style="margin-top:8px"><input id="loginName" placeholder="Nama" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f7"/></div>
+    <div style="margin-top:8px"><select id="loginRole" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f7"><option value="citizen">Warga</option><option value="admin">Admin</option></select></div>
+    <div style="margin-top:10px;text-align:right"><button class="btn" id="loginSubmit">Masuk</button></div>`);
+  document.getElementById('loginSubmit').addEventListener('click', ()=>{
+    const n = document.getElementById('loginName').value.trim() || (document.getElementById('loginRole').value==='admin'?'Admin':'Warga');
+    const r = document.getElementById('loginRole').value;
+    loginAs(r, n);
+    hideModal();
+  });
+}
+
+function loginAs(role, name){
+  state.user = { role, name: name || (role==='admin'?'Admin Demo':'Warga Demo') };
+  saveState();
+  renderAll();
+  showToast('Berhasil masuk sebagai '+state.user.name);
+}
+
+function showToast(msg){
+  showModal(`<div>${escapeHtml(msg)}</div>`);
+  setTimeout(hideModal, 1000);
+}
+
+/* Event handlers: navigation */
+btnNews.addEventListener('click', ()=>{ showOnly('news'); });
+btnServices.addEventListener('click', ()=>{ showOnly('services'); });
+btnReport.addEventListener('click', ()=>{ showOnly('report'); });
+goServices.addEventListener('click', ()=>{ showOnly('services'); });
+goReport.addEventListener('click', ()=>{ showOnly('report'); });
+
+function showOnly(view){
+  // hide all main views first
+  document.getElementById('newsView').style.display='none';
+  servicesView.style.display='none';
+  reportView.style.display='none';
+  adminView.style.display='none';
+  homeView.style.display='none';
+
+  if(view==='home'){ homeView.style.display='flex'; document.getElementById('newsView').style.display='block'; }
+  if(view==='news'){ document.getElementById('newsView').style.display='block'; }
+  if(view==='services'){ servicesView.style.display='block'; document.getElementById('newsView').style.display='none'; }
+  if(view==='report'){ reportView.style.display='block'; document.getElementById('newsView').style.display='none'; }
+  if(view==='admin'){ if(state.user && state.user.role==='admin'){ adminView.style.display='block'; } else showToast('Akses admin diperlukan'); }
+}
+
+/* Service buttons (open form with selected service) */
+svcButtons.forEach(b=>{
+  b.addEventListener('click', (e)=>{
+    const svc = e.target.closest('.service').dataset.svc;
+    openServiceForm(svc);
+  });
+});
+function openServiceForm(svc){
+  if(!state.user){ showToast('Silakan masuk terlebih dahulu untuk mengajukan layanan'); return; }
+  servicesWrap.style.display='block';
+  const titles = { izin_usaha: 'Permohonan Izin Usaha', bantuan_sosial: 'Permohonan Bantuan Sosial', izin_keramaian: 'Permohonan Izin Keramaian' };
+  serviceTitle.textContent = titles[svc] || 'Permohonan Layanan';
+  serviceForm.dataset.svc = svc;
+}
+
+/* service form submit */
+svcSubmit.addEventListener('click', ()=>{
+  const svc = serviceForm.dataset.svc || 'layanan_umum';
+  const name = document.getElementById('svcName').value.trim();
+  const nik = document.getElementById('svcNIK').value.trim();
+  const contact = document.getElementById('svcContact').value.trim();
+  const desc = document.getElementById('svcDesc').value.trim();
+  const file = document.getElementById('svcFile').value.trim();
+  if(!name || !desc){ alert('Nama dan keterangan wajib diisi'); return; }
+  const req = { id:idn(), svc, name, nik, contact, desc, file, status:'pending', createdAt:new Date().toISOString(), user: state.user?state.user.name:'anonymous' };
+  state.requests.push(req);
+  saveState();
+  renderAdmin();
+  servicesWrap.style.display='none';
+  serviceForm.reset();
+  showToast('Permohonan berhasil dikirim');
+});
+
+/* cancel svc form */
+svcCancel.addEventListener('click', ()=>{ servicesWrap.style.display='none'; serviceForm.reset(); });
+
+/* Report form */
+document.getElementById('repSubmit').addEventListener('click', ()=>{
+  const name = document.getElementById('repName').value.trim();
+  const contact = document.getElementById('repContact').value.trim();
+  const type = document.getElementById('repType').value;
+  const desc = document.getElementById('repDesc').value.trim();
+  const location = document.getElementById('repLocation').value.trim();
+  if(!desc){ alert('Deskripsi laporan wajib diisi'); return; }
+  const r = { id:idn(), name:name||'Anonim', contact, type: type||'Lainnya', desc, location, status:'new', createdAt:new Date().toISOString() };
+  state.reports.unshift(r);
+  saveState();
+  renderReports();
+  showToast('Laporan terkirim. Terima kasih.');
+  reportForm.reset();
+});
+
+/* render reports list (public) */
+function renderReports(){
+  reportList.innerHTML = '';
+  if(state.reports.length===0){ reportList.innerHTML = '<div class="small muted">Belum ada laporan</div>'; return; }
+  state.reports.forEach(r=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.style.marginBottom='8px';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong>${escapeHtml(r.type)}</strong><div class="small muted">${new Date(r.createdAt).toLocaleString()}</div></div>
+      <div class="small" style="margin-top:6px">${escapeHtml(r.desc)}</div>
+      <div class="small muted" style="margin-top:6px">Lokasi: ${escapeHtml(r.location||'—')} • Pelapor: ${escapeHtml(r.name)}</div>`;
+    reportList.appendChild(div);
+  });
+}
+
+/* Admin render */
+function renderAdmin(){
+  // requests
+  adminRequests.innerHTML = '';
+  if(state.requests.length===0) adminRequests.innerHTML = '<div class="small muted">Belum ada permohonan</div>';
+  state.requests.slice().reverse().forEach(req=>{
+    const d = document.createElement('div'); d.className='card'; d.style.marginBottom='8px';
+    d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${escapeHtml(req.svc)}</strong><div class="small muted">${escapeHtml(req.name)} • ${new Date(req.createdAt).toLocaleString()}</div></div><div>${statusLabel(req.status)}</div></div>
+      <div class="small" style="margin-top:8px">${escapeHtml(req.desc)}</div>
+      <div style="margin-top:8px;display:flex;gap:6px"><button class="btn" data-id="${req.id}" data-act="approve">Setujui</button><button class="ghost" data-id="${req.id}" data-act="reject">Tolak</button><button class="ghost" data-id="${req.id}" data-act="detail">Detail</button></div>`;
+    adminRequests.appendChild(d);
+  });
+
+  // reports
+  adminReports.innerHTML = '';
+  if(state.reports.length===0) adminReports.innerHTML = '<div class="small muted">Belum ada laporan</div>';
+  state.reports.slice().reverse().forEach(rep=>{
+    const d = document.createElement('div'); d.className='card'; d.style.marginBottom='8px';
+    d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${escapeHtml(rep.type)}</strong><div class="small muted">${escapeHtml(rep.location)} • ${new Date(rep.createdAt).toLocaleString()}</div></div><div>${statusLabel(rep.status)}</div></div>
+      <div class="small" style="margin-top:8px">${escapeHtml(rep.desc)}</div>
+      <div style="margin-top:8px;display:flex;gap:6px"><button class="btn" data-id="${rep.id}" data-act="r_done">Selesai</button><button class="ghost" data-id="${rep.id}" data-act="r_ignore">Abaikan</button></div>`;
+    adminReports.appendChild(d);
+  });
+
+  // attach event listeners (delegation)
+  adminRequests.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', (e)=>{
+      const id = e.target.dataset.id; const act = e.target.dataset.act;
+      const idx = state.requests.findIndex(x=>x.id===id);
+      if(idx<0) return;
+      if(act==='approve'){ state.requests[idx].status='done'; saveState(); renderAdmin(); showToast('Permohonan disetujui'); }
+      if(act==='reject'){ state.requests[idx].status='rejected'; saveState(); renderAdmin(); showToast('Permohonan ditolak'); }
+      if(act==='detail'){ showModal(`<pre style="white-space:pre-wrap">${escapeHtml(JSON.stringify(state.requests[idx],null,2))}</pre>`); }
+    });
+  });
+
+  adminReports.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', (e)=>{
+      const id = e.target.dataset.id; const act = e.target.dataset.act;
+      const idx = state.reports.findIndex(x=>x.id===id);
+      if(idx<0) return;
+      if(act==='r_done'){ state.reports[idx].status='done'; saveState(); renderAdmin(); showToast('Laporan ditandai selesai'); }
+      if(act==='r_ignore'){ state.reports[idx].status='ignored'; saveState(); renderAdmin(); showToast('Laporan diabaikan'); }
+    });
+  });
+}
+
+/* status label helper */
+function statusLabel(s){
+  if(s==='pending' || s==='new') return `<span class="status-pending">Menunggu</span>`;
+  if(s==='done' || s==='completed') return `<span class="status-done">Selesai</span>`;
+  if(s==='rejected' || s==='ignored') return `<span class="status-rejected">Ditolak</span>`;
+  return `<span class="small muted">${escapeHtml(s||'—')}</span>`;
+}
+
+/* import / export data */
+importDataBtn.addEventListener('click', ()=> inputFile.click());
+inputFile.addEventListener('change', (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=> {
+    try{
+      const obj = JSON.parse(r.result);
+      if(obj.news) state.news = obj.news;
+      if(obj.requests) state.requests = state.requests.concat(obj.requests.map(x=>({...x, id:idn()})));
+      if(obj.reports) state.reports = state.reports.concat(obj.reports.map(x=>({...x, id:idn()})));
+      saveState(); renderAll(); showToast('Import selesai');
+    }catch(err){ alert('Gagal import: '+err.message); }
+  };
+  r.readAsText(f,'UTF-8'); inputFile.value='';
+});
+downloadDataBtn.addEventListener('click', ()=> {
+  const txt = JSON.stringify(state, null, 2);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], {type:'application/json'}));
+  a.download = 'egov_surabaya_backup.json'; document.body.appendChild(a); a.click(); a.remove();
+});
+exportDataBtn.addEventListener('click', ()=> {
+  const txt = JSON.stringify({news: state.news, requests: state.requests, reports: state.reports}, null, 2);
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], {type:'application/json'}));
+  a.download = 'egov_surabaya_data.json'; document.body.appendChild(a); a.click(); a.remove();
+});
+clearAllDataBtn.addEventListener('click', ()=> {
+  if(!confirm('Hapus semua data (berita, permohonan, laporan) dari browser?')) return;
+  state.news = []; state.requests = []; state.reports = []; saveState(); renderAll(); showToast('Semua data dihapus');
+});
+refreshDataBtn.addEventListener('click', ()=> { renderAll(); showToast('Data disegarkan'); });
+
+/* tiny helpers */
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"'`=\/]/g, function(s){ return ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'
+  })[s];});
+}
+
+/* utility: show admin only (shortcut) */
+document.getElementById('btnLogin')?.addEventListener('click', openLoginModal);
+goServices.addEventListener('click', ()=>{ showOnly('services'); });
+goReport.addEventListener('click', ()=>{ showOnly('report'); });
+
+/* initial visibility */
+showOnly('home');
+
+/* final render */
+renderAll();
+
+</script>
+
+</body>
+</html>
